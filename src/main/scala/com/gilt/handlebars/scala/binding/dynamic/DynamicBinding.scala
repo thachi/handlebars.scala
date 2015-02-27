@@ -43,7 +43,13 @@ object DynamicBindingCache {
 
 class DynamicBinding(val data: Any) extends FullBinding[Any] with Loggable {
   override protected def factory = DynamicBinding
-  def render = if (isTruthy) data.toString else ""
+  def render = if (isTruthy) {
+    data match {
+      case Some(v) => v.toString
+      case v => v.toString
+      case _ => ""
+    }
+  } else ""
 
   def isTruthy = data match {
     case /* UndefinedValue |*/ None | Unit | Nil | null | false => false
